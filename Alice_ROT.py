@@ -6,7 +6,7 @@ n = 20
 
 # How to determine length string?
 # Time not yet handled.
-def ROT_Alice():
+def Alice_ROT():
     """
     Receive two random strings of length n, obtained from 1-2 ROT.
 

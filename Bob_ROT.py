@@ -6,7 +6,7 @@ n = 20
 
 # How to determine length string?
 # Time not yet handled.
-def ROT_Bob(c):
+def Bob_ROT(c):
     """
     Receive string s_c from Alice, obtained from 1-2 ROT.
 
