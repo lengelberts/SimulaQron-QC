@@ -30,7 +30,6 @@ def Bob_ROT(c):
             x_B.append(m)
 
         #Wait time.
-        
 
         #Step 3. Bob receives theta_A from Alice.
         basisinfo = Bob.recvClassical()
@@ -69,7 +68,7 @@ def Bob_ROT(c):
         #Construct X_c = x_B|I_c.
         X_c = []
         for i in I_c:
-            X_c.append(x_B[i])                      # Not i - 1!
+            X_c.append(x_B[i])
         for i in range(len(x_B) - len(I_c)):
             X_c.append(0)
         #Translate X_c into a numpy nx1 matrix.

@@ -1,3 +1,4 @@
+from time import sleep
 from numpy import matrix
 from numpy.random import randint
 from cqc.pythonLib import CQCConnection, qubit
@@ -20,7 +21,7 @@ def Alice_ROT():
     theta_A = [randint(2) for i in range(n)]
 
     with CQCConnection("Alice") as Alice:
-        #Step 1. (Continue) Set time to t = 0. Send n qubits (BB84 states) to Bob.
+        #Step 1. (Continue) Send n qubits (BB84 states) to Bob.
         for i in range(n):
             q = qubit(Alice)
             if x_A[i] == 1:
@@ -31,7 +32,9 @@ def Alice_ROT():
         print("Alice has sent n (random) qubits to Bob.")
 
         #Wait time.
-        
+        waiting_time = 2 # Seconds
+        print("Both parties wait {} seconds.".format(waiting_time))
+        sleep(waiting_time)
 
         #Step 3. Alice sends theta_A to Bob.
         Alice.sendClassical("Bob",theta_A)
@@ -56,12 +59,12 @@ def Alice_ROT():
         #Construct X_0 = x_A|I_0 and X_1 = x_A|I_1.
         X_0 = []
         for i in I_0:
-            X_0.append(x_A[i])                      # Not i - 1!
+            X_0.append(x_A[i])
         for i in range(len(x_A) - len(I_0)):
             X_0.append(0)
         X_1 = []
         for i in I_1:
-            X_1.append(x_A[i])                      # Not i - 1!
+            X_1.append(x_A[i])
         for i in range(len(x_A) - len(I_1)):
             X_1.append(0)
         #Translate X_0 and X_1 into a numpy nx1 matrix.
