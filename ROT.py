@@ -1,4 +1,4 @@
-import time
+from time import sleep
 from numpy import matrix
 from numpy.random import randint
 from cqc.pythonLib import CQCConnection, qubit
@@ -61,8 +61,9 @@ def ROT(n,c):
 
 
     #Wait time.
-    wait_time = 1 # Wait one second
-    
+    waiting_time = 2 # Seconds
+    print("Both parties wait {} seconds.".format(waiting_time))
+    sleep(waiting_time)
 
 
     #Step 3.
