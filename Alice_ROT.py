@@ -5,14 +5,16 @@ from cqc.pythonLib import CQCConnection, qubit
 
 n = 20
 
-def Alice_ROT():
+def Alice_ROT(l):
     """
-    Receive two random strings of length n, obtained from 1-2 ROT.
+    Receive two random strings of length l, obtained from 1-2 ROT.
 
-    No input arguments.
+    Input argument:
+    l -- integer (<= 20), length of output
+
     Output:
-    s_0 -- list of n bits
-    s_1 -- list of n bits
+    s_0 -- list of l bits
+    s_1 -- list of l bits
     """
     #Step 1. Alice randomly picks x_A and theta_B in {0,1}^n.
     x_A = [randint(2) for i in range(n)]
@@ -27,7 +29,7 @@ def Alice_ROT():
             if theta_A[i] == 1:
                 q.H()
             Alice.sendQubit(q,"Bob")
-        print("Alice has sent n (random) qubits to Bob.")
+        print("Alice has sent {} (random) qubits to Bob.".format(n))
 
         #Wait time.
         waiting_time = 2 # Seconds
@@ -44,14 +46,14 @@ def Alice_ROT():
         data1 = Alice.recvClassical()
         I_1 = list(data1)
 
-        #Step 5. Alice randomly picks two two-universal hash functions f_0, f_1 and
+        #Step 5. Alice randomly picks two two-universal (lxn) hash functions f_0, f_1 and
         #sends them to Bob.
-        f_0 = [[randint(2) for i in range(n)] for j in range(n)] # randint(2,size=(n,n))
-        f_1 = [[randint(2) for i in range(n)] for j in range(n)] # randint(2,size=(n,n))
-        for i in range(n):
+        f_0 = [[randint(2) for i in range(n)] for j in range(l)] # randint(2,size=(l,n))
+        f_1 = [[randint(2) for i in range(n)] for j in range(l)] # randint(2,size=(l,n))
+        for i in range(l):
             Alice.sendClassical("Bob",f_0[i])
         print("Bob has received f_0.")
-        for i in range(n):
+        for i in range(l):
             Alice.sendClassical("Bob",f_1[i])       # Need to do separately!
         print("Bob has received f_1.")
         #Construct X_0 = x_A|I_0 and X_1 = x_A|I_1.

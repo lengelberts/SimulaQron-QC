@@ -4,14 +4,16 @@ from cqc.pythonLib import CQCConnection, qubit
 
 n = 20
 
-def Bob_ROT(c):
+def Bob_ROT(c,l):
     """
     Receive string s_c from Alice, obtained from 1-2 ROT.
 
-    Input argument:
+    Input arguments:
     c -- integer 0 or 1, Bob's choice bit c
+    l -- integer (<= 20), length of output
+
     Output:
-    s_c -- list of n bits corresponding to the string s_i that Alice outputs for i = c
+    s_c -- list of l bits corresponding to the string s_i that Alice outputs for i = c
     """
     #Step 2. Bob randomly picks theta_B in {0,1}^n.
     theta_B = [randint(2) for i in range(n)]
@@ -53,15 +55,18 @@ def Bob_ROT(c):
         print("Alice has received I_1.")
 
         #Step 5. Bob receives f_0 and f_1 from Alice.
+        #Here, f_i is a list of l lists each containing n elements.
         f_0 = []
-        for i in range(n):
+        for i in range(l):
             data0 = Bob.recvClassical()
             f_0.append(list(data0))
         f_1 = []
-        for i in range(n):
+        for i in range(l):
             data1 = Bob.recvClassical()
             f_1.append(list(data1))
 
+        print("length f0",len(f_0))
+        print("length f1",len(f_1))
         #Step 6.
         #Construct X_c = x_B|I_c.
         X_c = []
