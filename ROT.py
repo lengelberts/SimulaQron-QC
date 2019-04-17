@@ -5,13 +5,14 @@ from cqc.pythonLib import CQCConnection, qubit
 
 
 # ROT does not yet achieve classical communication, nor time handling is implemented yet.
-def ROT(n,c):
+def ROT(c,l,n):
     """
     Run the protocol for 1-2 ROT between Alice and Bob.
 
     Arguments:
-    n -- integer <= 20, length of the resulting strings s_0, s_1, and s_c
     c -- integer 0 or 1, choice bit for Bob
+    l -- integer <= l, length of the resulting strings s_0, s_1, and s_c
+    n -- integer <= 20, length of x_A, theta_A, x_B, theta_B
 
     Print when communication between Alice and Bob occurs.
     At the end, print the resulting output strings (s_0 and s_1 for Alice; s_c for Bob).
@@ -25,6 +26,10 @@ def ROT(n,c):
         raise Exception("Input argument n must not be greater than 20.")
     if c != 0 and c != 1:
         raise Exception("Input argument c must be either 0 or 1.")
+    if l > n: 					# Note: l must be way smaller, so adapt!
+        raise Exception("Input argument l cannot be greater than n.")
+    if n > 20:
+        raise Exception("Input argument n must not be greater than 20.")
 
     #Step 1.
     #Alice randomly picks x_A and theta_B in {0,1}^n.
@@ -42,7 +47,7 @@ def ROT(n,c):
             if theta_A[i] == 1:
                 q.H()
             Alice.sendQubit(q,"Bob")
-    print("Alice sends n (random) qubits to Bob.")
+    print("Alice sends {} (random) qubits to Bob.".format(n))
 
 
     #Step 2.
@@ -95,8 +100,8 @@ def ROT(n,c):
 
     #Step 5.
     #Alice randomly picks two two-universal hash functions f_0, f_1.
-    f_0 = randint(2,size=(n,n))
-    f_1 = randint(2,size=(n,n))
+    f_0 = randint(2,size=(l,n))
+    f_1 = randint(2,size=(l,n))
     #Alice sends f_0, f_1 to Bob.
     
     print("Alice sends f_0 and f_1 to Bob.")
