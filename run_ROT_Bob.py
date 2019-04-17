@@ -1,3 +1,5 @@
 from Bob_ROT import Bob_ROT
 
-Bob_ROT(0)
+l = 5
+
+Bob_ROT(0,l)

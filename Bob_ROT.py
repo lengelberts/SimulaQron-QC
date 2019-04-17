@@ -65,8 +65,6 @@ def Bob_ROT(c,l):
             data1 = Bob.recvClassical()
             f_1.append(list(data1))
 
-        print("length f0",len(f_0))
-        print("length f1",len(f_1))
         #Step 6.
         #Construct X_c = x_B|I_c.
         X_c = []
