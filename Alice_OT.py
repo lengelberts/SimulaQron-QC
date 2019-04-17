@@ -3,7 +3,7 @@ from Alice_ROT import Alice_ROT
 
 
 #Now works for n = 20, l <= 20
-def Alice_OT(m0,m1,l):
+def Alice_OT(m0,m1,l,n):
     """
     Perform 1-2 OT for Alice's part, without revealing the other input list.
 
@@ -11,10 +11,11 @@ def Alice_OT(m0,m1,l):
     m0 -- list of length l consisting of 0s and 1s
     m1 -- list of length l consisting of 0s and 1s
     l -- integer (<= 20), length of m0 and m1
+    n -- integer (<= 20)
 
     There is no output.
     """
-    s0,s1 = Alice_ROT(l)
+    s0,s1 = Alice_ROT(l,n)
 
     xor_0 = []
     xor_1 = []

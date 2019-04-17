@@ -2,15 +2,14 @@ from numpy import matrix
 from numpy.random import randint
 from cqc.pythonLib import CQCConnection, qubit
 
-n = 20
-
-def Bob_ROT(c,l):
+def Bob_ROT(c,l,n=20):
     """
     Receive string s_c from Alice, obtained from 1-2 ROT.
 
     Input arguments:
     c -- integer 0 or 1, Bob's choice bit c
     l -- integer (<= 20), length of output
+    n -- integer (<= 20)
 
     Output:
     s_c -- list of l bits corresponding to the string s_i that Alice outputs for i = c
@@ -23,6 +22,9 @@ def Bob_ROT(c,l):
         #for each i and obtains x_B (list of length n, containing 0s and 1s).
         x_B = []
         for i in range(n):
+            if (i+1)%20 == 0:
+                data = Bob.recvClassical()
+                print("Bob received {} qubits.".format(i+1))
             q = Bob.recvQubit()
             if theta_B[i] == 1:
                 q.H()

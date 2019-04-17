@@ -3,14 +3,13 @@ from numpy import matrix
 from numpy.random import randint
 from cqc.pythonLib import CQCConnection, qubit
 
-n = 20
-
-def Alice_ROT(l):
+def Alice_ROT(l,n=20):
     """
     Receive two random strings of length l, obtained from 1-2 ROT.
 
     Input argument:
     l -- integer (<= 20), length of output
+    n -- integer (<= 20)
 
     Output:
     s_0 -- list of l bits
@@ -23,6 +22,9 @@ def Alice_ROT(l):
     with CQCConnection("Alice") as Alice:
         #Step 1. (Continue) Send n qubits (BB84 states) to Bob.
         for i in range(n):
+            if (i+1)%20 == 0:
+                Alice.sendClassical("Bob",0)
+                print("Alice informs Bob she has sent {} qubits.".format(i+1))
             q = qubit(Alice)
             if x_A[i] == 1:
                 q.X()
