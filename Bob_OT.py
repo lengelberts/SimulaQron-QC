@@ -2,18 +2,17 @@ from cqc.pythonLib import CQCConnection
 from Bob_ROT import Bob_ROT
 
 
-#Now works for n = 20, l <= 20
-def Bob_OT(c,l,n):
+def Bob_OT(c, l, n=20):
     """
     Return Alice's input list corresponding to choice bit c, obtained from 1-2 OT.
 
     Input arguments:
     c -- integer 0 or 1, Bob's choice bit
-    l -- integer (<= 20), length of output
-    n -- integer (<= 20)
+    l -- integer, length of output lists (<= n)
+    n -- integer, length of n for ROT (default 20)
 
     Output:
-    list of length l
+    m_c -- list of l bits corresponding to list m_i that Alice inputs for i = c
     """
     s_c = Bob_ROT(c,l,n)
 

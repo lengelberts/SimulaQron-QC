@@ -3,21 +3,23 @@ from numpy import matrix
 from numpy.random import randint
 from cqc.pythonLib import CQCConnection, qubit
 
-def Alice_ROT(l,n=20):
+def Alice_ROT(l, n=20, waiting_time=2):
     """
-    Receive two random strings of length l, obtained from 1-2 ROT.
+    Return two random strings of length l, obtained from 1-2 ROT.
 
     Input argument:
-    l -- integer (<= 20), length of output
-    n -- integer (<= 20)
+    l            -- integer, length of output lists (<= n)
+    n            -- integer, length of x_A and y_A (default 20)
+    waiting_time -- integer, amount of seconds that Alice and Bob wait before
+                    Alice sends her basis string y_A (default 2)
 
     Output:
     s_0 -- list of l bits
     s_1 -- list of l bits
     """
-    #Step 1. Alice randomly picks x_A and theta_B in {0,1}^n.
+    #Step 1. Alice randomly picks x_A and y_B in {0,1}^n.
     x_A = [randint(2) for i in range(n)]
-    theta_A = [randint(2) for i in range(n)]
+    y_A = [randint(2) for i in range(n)]
 
     with CQCConnection("Alice") as Alice:
         #Step 1. (Continue) Send n qubits (BB84 states) to Bob.
@@ -28,19 +30,18 @@ def Alice_ROT(l,n=20):
             q = qubit(Alice)
             if x_A[i] == 1:
                 q.X()
-            if theta_A[i] == 1:
+            if y_A[i] == 1:
                 q.H()
             Alice.sendQubit(q,"Bob")
         print("Alice has sent {} (random) qubits to Bob.".format(n))
 
         #Wait time.
-        waiting_time = 2 # Seconds
         print("Both parties wait {} seconds.".format(waiting_time))
         sleep(waiting_time)
 
-        #Step 3. Alice sends theta_A to Bob.
-        Alice.sendClassical("Bob",theta_A)
-        print("Bob has received theta_A.")
+        #Step 3. Alice sends y_A to Bob.
+        Alice.sendClassical("Bob", y_A)
+        print("Bob has received y_A.")
 
         #Step 4. Alice receives I_0 and I_1 from Bob.
         data0 = Alice.recvClassical()

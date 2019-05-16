@@ -2,23 +2,23 @@ from numpy import matrix
 from numpy.random import randint
 from cqc.pythonLib import CQCConnection, qubit
 
-def Bob_ROT(c,l,n=20):
+def Bob_ROT(c, l, n=20):
     """
-    Receive string s_c from Alice, obtained from 1-2 ROT.
+    Return string s_c from Alice, obtained from 1-2 ROT.
 
     Input arguments:
     c -- integer 0 or 1, Bob's choice bit c
-    l -- integer (<= 20), length of output
-    n -- integer (<= 20)
+    l -- integer, length of output lists (<= n)
+    n -- integer, length of y_B (default 20)
 
     Output:
     s_c -- list of l bits corresponding to the string s_i that Alice outputs for i = c
     """
-    #Step 2. Bob randomly picks theta_B in {0,1}^n.
-    theta_B = [randint(2) for i in range(n)]
+    #Step 2. Bob randomly picks y_B in {0,1}^n.
+    y_B = [randint(2) for i in range(n)]
 
     with CQCConnection("Bob") as Bob:
-        #Step 2. (Continue) Bob measures the ith received qubit in basis theta_B[i]
+        #Step 2. (Continue) Bob measures the ith received qubit in basis y_B[i]
         #for each i and obtains x_B (list of length n, containing 0s and 1s).
         x_B = []
         for i in range(n):
@@ -26,22 +26,22 @@ def Bob_ROT(c,l,n=20):
                 data = Bob.recvClassical()
                 print("Bob received {} qubits.".format(i+1))
             q = Bob.recvQubit()
-            if theta_B[i] == 1:
+            if y_B[i] == 1:
                 q.H()
             m = q.measure()
             x_B.append(m)
 
         #Wait time.
 
-        #Step 3. Bob receives theta_A from Alice.
+        #Step 3. Bob receives y_A from Alice.
         basisinfo = Bob.recvClassical()
-        theta_A = list(basisinfo)
+        y_A = list(basisinfo)
 
         #Step 4. Bob forms the sets I_c and I_cbar. Bob sends I_0 and I_1 to Alice.
         I_c = []
         I_cbar = []
         for i in range(n):
-            if theta_A[i] == theta_B[i]:
+            if y_A[i] == y_B[i]:
                 I_c.append(i)
             else:
                 I_cbar.append(i)

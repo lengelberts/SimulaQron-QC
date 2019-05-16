@@ -2,20 +2,21 @@ from cqc.pythonLib import CQCConnection
 from Alice_ROT import Alice_ROT
 
 
-#Now works for n = 20, l <= 20
-def Alice_OT(m0,m1,l,n):
+def Alice_OT(m0, m1, l, n=20, waiting_time=2):
     """
     Perform 1-2 OT for Alice's part, without revealing the other input list.
 
     Input arguments:
-    m0 -- list of length l consisting of 0s and 1s
-    m1 -- list of length l consisting of 0s and 1s
-    l -- integer (<= 20), length of m0 and m1
-    n -- integer (<= 20)
+    m0           -- list of length l consisting of 0s and 1s
+    m1           -- list of length l consisting of 0s and 1s
+    l            -- integer, length of m0 and m1 (<= n)
+    n            -- integer, length of n for ROT (default 20)
+    waiting_time -- integer, amount of seconds that Alice and Bob wait during
+                    the protocol (default 2)
 
     There is no output.
     """
-    s0,s1 = Alice_ROT(l,n)
+    s0,s1 = Alice_ROT(l,n,waiting_time)
 
     xor_0 = []
     xor_1 = []
