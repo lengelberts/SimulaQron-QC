@@ -1,6 +1,7 @@
 from Bob_ROT import Bob_ROT
 
-l = 5
-n = 20
+c = 0
+l = 10
+n = 100
 
-Bob_ROT(0,l,n)
+Bob_ROT(c,l,n)
