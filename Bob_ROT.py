@@ -1,5 +1,5 @@
 from numpy import matrix, random
-from cqc.pythonLib import CQCConnection, qubit
+from cqc.pythonLib import CQCConnection
 
 def Bob_ROT(c, l, n=100):
     """
@@ -36,7 +36,8 @@ def Bob_ROT(c, l, n=100):
 
         # Wait.
 
-        # Step 3. Bob receives y_A from Alice.
+        # (Step 3)
+        # Bob receives y_A from Alice.
         basisinfo = Bob.recvClassical()
         y_A = list(basisinfo)
 
