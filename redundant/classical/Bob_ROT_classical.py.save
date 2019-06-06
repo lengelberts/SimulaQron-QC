@@ -1,0 +1,90 @@
+from numpy import matrix
+from numpy.random import randint
+from cqc.pythonLib import CQCConnection, qubit
+
+def Bob_ROT_classical(c,l,n=20):
+    """
+    Receive string s_c from Alice, obtained from 1-2 ROT.
+    Everything is classical.
+
+    Input arguments:
+    c -- integer 0 or 1, Bob's choice bit c
+    l -- integer (<= 20), length of output
+    n -- integer (<= 20)
+
+    Output:
+    s_c -- list of l bits corresponding to the string s_i that Alice outputs for i = c
+    """
+    #Step 2. Bob randomly picks theta_B in {0,1}^n.
+    theta_B = [randint(2) for i in range(n)]
+
+    with CQCConnection("Bob") as Bob:
+        #Step 2. (Continue) Bob measures the ith received qubit in basis theta_B[i]
+        #for each i and obtains x_B (list of length n, containing 0s and 1s).
+        x_B = []
+        for i in range(n):
+            if (i+1)%20 == 0:
+                data = Bob.recvClassical()
+                print("Bob received {} qubits.".format(i+1))
+            q = Bob.recvClassical()
+            if theta_B[i] == 1:
+                q.H()
+            m = q.measure()
+            x_B.append(m)
+
+        #Wait time.
+
+        #Step 3. Bob receives theta_A from Alice.
+        basisinfo = Bob.recvClassical()
+        theta_A = list(basisinfo)
+
+        #Step 4. Bob forms the sets I_c and I_cbar. Bob sends I_0 and I_1 to Alice.
+        I_c = []
+        I_cbar = []
+        for i in range(n):
+            if theta_A[i] == theta_B[i]:
+                I_c.append(i)
+            else:
+                I_cbar.append(i)
+        if c == 0:
+            I_0 = I_c
+            I_1 = I_cbar
+        else:
+            I_0 = I_cbar
+            I_1 = I_c
+        Bob.sendClassical("Alice",I_0)
+        print("Alice has received I_0.")
+        Bob.sendClassical("Alice",I_1)
+        print("Alice has received I_1.")
+
+        #Step 5. Bob receives f_0 and f_1 from Alice.
+        #Here, f_i is a list of l lists each containing n elements.
+        f_0 = []
+        for i in range(l):
+            data0 = Bob.recvClassical()
+            f_0.append(list(data0))
+        f_1 = []
+        for i in range(l):
+            data1 = Bob.recvClassical()
+            f_1.append(list(data1))
+
+        #Step 6.
+        #Construct X_c = x_B|I_c.
+        X_c = []
+        for i in I_c:
+            X_c.append(x_B[i])
+        for i in range(len(x_B) - len(I_c)):
+            X_c.append(0)
+        #Translate X_c into a numpy nx1 matrix.
+        X_c = matrix(X_c).transpose()
+        #Bob outputs s_c = f_c(X_c).
+        if c == 0:
+            f_c = f_0
+        else:
+            f_c = f_1
+        s_c = f_c*X_c % 2
+        s_c = [s_c[i,0] for i in range(len(s_c))]
+
+    print("Bob outputs s_c.")
+
+    return s_c
